@@ -50,8 +50,10 @@ class Agent:
             if terminated:
                 target[0][action] = reward
             else:
+                # Double Q-Learning
+                action = np.argmax(self.q_network.predict(next_state)[0])
                 t = self.target_network.predict(next_state)
-                target[0][action] = reward + self.gamma * np.amax(t)
+                target[0][action] = reward + self.gamma * t[0][action] # np.amax(t)
             
             self.q_network.fit(state, target, epochs=1, verbose=0)
 
